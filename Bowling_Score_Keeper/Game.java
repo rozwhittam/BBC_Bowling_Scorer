@@ -7,8 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -50,32 +53,34 @@ public class Game implements ActionListener{
 	}
 	
 	
+	//Play through a single frame for all players
 	private void playFrame(){
 		int num_input;
 		
 		//for each player in the game
 		while(playerNumber<playerCount){
-						
-			num_input =  Integer.parseInt(JOptionPane.showInputDialog(players[playerNumber].getName()+ ":\n Frame: " + (frameNumber+1) + "\nEnter number of pins hit (first throw):"));	
-
+		
+			num_input = gui.getUserInput(players[playerNumber].getName()+ ":\nFrame: " + (frameNumber+1) + "\nBall: 1\nEnter number of pins hit:",players[playerNumber].getFrame(frameNumber).getTotal());
+			
 			players[playerNumber].addBonusPoints(num_input);
 			players[playerNumber].setFrameScore(frameNumber,1,num_input);
 			
 			if(num_input==10){
 				if(frameNumber==9){
 					
-					num_input= Integer.parseInt(JOptionPane.showInputDialog(players[playerNumber].getName()+ ":\nBonus Ball 1 - Enter number of pins hit:"));
+					num_input= gui.getUserInput(players[playerNumber].getName()+ ":\nBonus Ball 1 - Enter number of pins hit:",0);
 					players[playerNumber].addBonusPoints(num_input);
-					num_input= Integer.parseInt(JOptionPane.showInputDialog(players[playerNumber].getName()+ ":\nBonus Ball 2 - Enter number of pins hit:"));
+					num_input= gui.getUserInput(players[playerNumber].getName()+ ":\nBonus Ball 2 - Enter number of pins hit:",0);
 					players[playerNumber].addBonusPoints(num_input);
 				}
 			}
 			else{
-				num_input= Integer.parseInt(JOptionPane.showInputDialog(players[playerNumber].getName()+ ":\n Frame: " + (frameNumber+1) + "\nEnter number of pins hit (second throw):"));
+				num_input= gui.getUserInput(players[playerNumber].getName()+ ":\n Frame: " + (frameNumber+1) + "\nBall: 2\nEnter number of pins hit:",players[playerNumber].getFrame(frameNumber).getTotal());
+				
 				players[playerNumber].addBonusPoints(num_input);
 				players[playerNumber].setFrameScore(frameNumber,2,num_input);
 				if(frameNumber==9 && players[playerNumber].getFrame(frameNumber).getTotal()==10){
-					num_input= Integer.parseInt(JOptionPane.showInputDialog(players[playerNumber].getName()+ ":\nBonus Ball - Enter number of pins hit:"));
+					num_input= gui.getUserInput(players[playerNumber].getName()+ ":\nBonus Ball - Enter number of pins hit:",0);
 					players[playerNumber].addBonusPoints(num_input);
 				}
 			}
@@ -137,6 +142,7 @@ public class Game implements ActionListener{
 		JButton src = (JButton)e.getSource();
 		
 		if(src.getText() == "Add Player"){
+			gui.enableStartGame();
 			String s;
 	    	s = JOptionPane.showInputDialog("Enter Player Name");
 	    	String blank = new String("");
@@ -159,6 +165,7 @@ public class Game implements ActionListener{
 		}
 		
 		if(src.getText() == "Start Game"){
+			gui.disableAddPlayer();
 			startGame();
 		}
 		
